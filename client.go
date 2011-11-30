@@ -24,7 +24,7 @@ func New(addrs ...string) (*Client, error) {
 }
 
 func (c *Client) connect() (err error) {
-	n := rand.Intn(len(c.addrs) - 1)
+	n := rand.Intn(len(c.addrs))
 	c.cn, err = net.Dial("tcp", c.addrs[n])
 	return
 }
