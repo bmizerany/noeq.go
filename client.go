@@ -3,6 +3,7 @@ package noeq
 import (
 	"encoding/binary"
 	"errors"
+	"io"
 	"math/rand"
 	"net"
 	"sync"
@@ -14,18 +15,32 @@ type Client struct {
 	mu    sync.Mutex
 	cn    net.Conn
 	addrs []string
+	token string
 }
 
-func New(addrs ...string) (*Client, error) {
+func New(token string, addrs ...string) (*Client, error) {
 	if len(addrs) == 0 {
 		return nil, ErrNoAddrs
 	}
-	return &Client{addrs: addrs}, nil
+	return &Client{token: token, addrs: addrs}, nil
 }
 
 func (c *Client) connect() (err error) {
 	n := rand.Intn(len(c.addrs))
 	c.cn, err = net.Dial("tcp", c.addrs[n])
+	if err != nil {
+		return
+	}
+
+	return c.auth()
+}
+
+func (c *Client) auth() (err error) {
+	if c.token != "" {
+		_, err = io.WriteString(c.cn, "\000"+c.token)
+		return
+	}
+
 	return
 }
 
