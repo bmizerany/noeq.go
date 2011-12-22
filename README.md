@@ -14,7 +14,7 @@
 		)
 
 		func main() {
-			fl, err := noeq.New("localhost:4444")
+			fl, err := noeq.New("secretToken", "localhost:4444")
 			if err != nil {
 				log.Fatal(err)
 			}
