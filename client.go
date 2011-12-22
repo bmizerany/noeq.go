@@ -46,7 +46,7 @@ func (c *Client) connect() (err error) {
 
 func (c *Client) auth() (err error) {
 	if c.token != "" {
-		l := fmt.Sprintf("%s", []byte{byte(len(c.token))})
+		l := fmt.Sprintf("\000%s", []byte{byte(len(c.token))})
 		_, err = io.WriteString(c.cn, l+c.token)
 		return
 	}
