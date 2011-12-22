@@ -3,13 +3,17 @@ package noeq
 import (
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"io"
 	"math/rand"
 	"net"
 	"sync"
 )
 
-var ErrNoAddrs = errors.New("noeq: no addresses provided")
+var (
+	ErrNoAddrs      = errors.New("noeq: no addresses provided")
+	ErrInvalidToken = errors.New("noeq: token > 255 bytes in length")
+)
 
 type Client struct {
 	mu    sync.Mutex
@@ -22,6 +26,11 @@ func New(token string, addrs ...string) (*Client, error) {
 	if len(addrs) == 0 {
 		return nil, ErrNoAddrs
 	}
+
+	if len(token) > 255 {
+		return nil, ErrInvalidToken
+	}
+
 	return &Client{token: token, addrs: addrs}, nil
 }
 
@@ -37,7 +46,8 @@ func (c *Client) connect() (err error) {
 
 func (c *Client) auth() (err error) {
 	if c.token != "" {
-		_, err = io.WriteString(c.cn, "\000"+c.token)
+		l := fmt.Sprintf("%s", []byte{byte(len(c.token))})
+		_, err = io.WriteString(c.cn, l+c.token)
 		return
 	}
 
