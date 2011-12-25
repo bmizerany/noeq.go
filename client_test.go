@@ -2,11 +2,12 @@ package noeq
 
 import (
 	"github.com/bmizerany/assert"
+	"os"
 	"testing"
 )
 
 func TestClientGen(t *testing.T) {
-	c, err := New("", "localhost:4444")
+	c, err := New(os.Getenv("NOEQ_TOKEN"), "localhost:4444")
 	if err != nil {
 		t.Fatal(err)
 	}

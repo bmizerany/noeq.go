@@ -1,6 +1,7 @@
 package noeq
 
 import (
+	"os"
 	"testing"
 )
 
@@ -10,7 +11,7 @@ import (
 )
 
 func TestExample(t *testing.T) {
-	fl, err := New("", "localhost:4444")
+	fl, err := New(os.Getenv("NOEQ_TOKEN"), "localhost:4444")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -18,7 +19,7 @@ func TestExample(t *testing.T) {
 	for n := 0; n < 100; n++ {
 		id, err := genOne(fl, 3)
 		if err != nil {
-			log.Fatal("FATAL: unable to connect to weiqid")
+			log.Fatal("FATAL: unable to connect to noeqd")
 		}
 		log.Printf("%d", id)
 	}

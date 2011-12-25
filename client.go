@@ -4,7 +4,6 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"io"
 	"math/rand"
 	"net"
 	"sync"
@@ -46,11 +45,9 @@ func (c *Client) connect() (err error) {
 
 func (c *Client) auth() (err error) {
 	if c.token != "" {
-		l := fmt.Sprintf("\000%s", []byte{byte(len(c.token))})
-		_, err = io.WriteString(c.cn, l+c.token)
+		_, err = fmt.Fprintf(c.cn, "\000%c%s", len(c.token), c.token)
 		return
 	}
-
 	return
 }
 
