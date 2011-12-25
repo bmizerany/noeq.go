@@ -10,7 +10,7 @@ import (
 )
 
 func TestExample(t *testing.T) {
-	fl, err := New("localhost:4444")
+	fl, err := New("", "localhost:4444")
 	if err != nil {
 		t.Fatal(err)
 	}

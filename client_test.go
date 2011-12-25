@@ -6,7 +6,10 @@ import (
 )
 
 func TestClientGen(t *testing.T) {
-	c, _ := New("localhost:4444")
+	c, err := New("", "localhost:4444")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	const n = 10
 	ids, err := c.Gen(n)

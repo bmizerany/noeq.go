@@ -71,13 +71,12 @@ func (c *Client) Gen(n uint8) (ids []uint64, err error) {
 		}
 	}
 
-	ids = make([]uint64, n)
-
 	_, err = c.cn.Write([]byte{n})
 	if err != nil {
 		return
 	}
 
+	ids = make([]uint64, n)
 	err = binary.Read(c.cn, binary.BigEndian, &ids)
 	return
 }
